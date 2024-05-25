@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Folder to Text</title>
+    <style>
+        .folder-tree {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Folder to Text</h1>
+    <form method="POST">
+        <label for="folder_path">Select Folder:</label>
+        <select name="folder_path" id="folder_path">
+            {% for folder, subfolders in folder_choices %}
+                <option value="{{ folder }}">{{ folder }}</option>
+                {% for subfolder in subfolders %}
+                    <option value="{{ subfolder }}">&nbsp;&nbsp;└── {{ subfolder }}</option>
+                {% endfor %}
+            {% endfor %}
+        </select>
+        <br><br>
+        <input type="submit" value="Process Files">
+    </form>
+    <br>
+    <h3>Processed Files:</h3>
+    <ul>
+        {% for file, line_count in processed_files %}
+        <li>{{ file.split("'''--- ")[1].split(" ---")[0] }} ({{ line_count }} lines)</li>
+        {% endfor %}
+    </ul>
+    <br>
+    <form method="POST" action="/download">
+        <input type="hidden" name="output_text" id="output_text">
+        <input type="submit" value="Download as .txt">
+    </form>
+    <br>
+    <h3>Output:</h3>
+    <textarea rows="20" cols="100" id="output">{{ output_text }}</textarea>
+    <br>
+    <button onclick="copyToClipboard()">Copy to Clipboard</button>
+    
+    <script>
+        function copyToClipboard() {
+            var output = document.getElementById("output");
+            output.select();
+            document.execCommand("copy");
+            alert("Text copied to clipboard!");
+        }
+        
+        // Update the hidden input field with the edited output text
+        document.getElementById("output").addEventListener("input", function() {
+            document.getElementById("output_text").value = this.value;
+        });
+    </script>
+</body>
+</html>

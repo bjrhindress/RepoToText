@@ -1,6 +1,7 @@
-**/node_modules
+*node_modules*
 /.vscode
 /myenv
+/repototext_venv
 
 # local env files
 .env.local
@@ -12,3 +13,6 @@ setupTests.js
 ``` 
 /data
 /notes
+/output
+*.png
+*.ico

@@ -6,13 +6,23 @@ WORKDIR /app
 
 # Copy over the python files and requirements
 COPY ./RepoToText.py /app
+COPY ./FolderToTextFlask.py /app
+RUN mkdir templates
+COPY ./templates/index.html /app/templates
+
 COPY ./requirements.txt /app
 
 # Install the python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN apt-get update && apt-get install -y supervisor
+
 # Expose the port for the server
 EXPOSE 5000
+EXPOSE 3001
 
 # Start the server
-CMD ["python", "RepoToText.py"]
+# CMD ["python", "RepoToText.py"]
+
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+CMD ["/usr/bin/supervisord"]
